@@ -1,0 +1,6 @@
+venv
+.envrc
+development.env
+dev.env
+.idea
+.vscode
