@@ -1,6 +1,7 @@
 import os
 from sqlalchemy import create_engine
 import pandas as pd
+import html
 
 db_string = os.environ['DB_URL']
 engine = create_engine(db_string)
@@ -75,8 +76,15 @@ class WithPandas():
         df = pd.read_sql_query(query, con=self.db_conn, chunksize=100)
 
         for chunk in df:
-            if processor_fn:
-                processor_fn(chunk)
+            grouped_df = chunk.groupby(by='product_id')
+
+            for product_id, attributes in grouped_df:
+                product_name = html.unescape(attributes['product_name'].unique()[0])
+                brand_name = html.unescape(attributes['brand_name'].unique()[0])
+                image_urls = attributes['image_url'].unique()
+
+                if processor_fn:
+                    processor_fn(product_id, image_urls, product_name, brand_name)
 
 
 query = '''
@@ -92,10 +100,5 @@ SELECT unique_products.*, ci.image_url, ci.s3_image_url, ci.source
                                   INNER JOIN cosmetics_images ci on ci.cosmetics_product_id = product_id
                          ORDER BY unique_products.product_name ASC, unique_products.brand_name ASC
 '''
-
-
-# def processor_fn(result_batch):
-#     print(f'{len(result_batch)} obtained.')
-#     print(result_batch)
 
 
