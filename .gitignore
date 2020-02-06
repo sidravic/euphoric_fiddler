@@ -9,3 +9,8 @@ notebooks/reviews.csv
 notebooks/reviews.zip
 export-stage-1
 datasets/csv/*.csv*
+notebooks/.ipynb_checkpoints*
+notebooks/reviews_with_category.csv
+notebooks/reviews_with_category.csv.tgz
+notebooks/models/*
+scribble/*

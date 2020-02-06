@@ -31,7 +31,7 @@ def extract_valid_product_ids(query):
 
 def reviews_query(product_ids_as_str):
     return f"""
-        select cp.id as product_id, cp.name as product, cb.name as brand, crc.* as review  from cosmetics_review_comments crc 
+        select cp.id as product_id, cp.name as product, cb.name as brand, cp.categories as product_categories, crc.* as review  from cosmetics_review_comments crc 
             INNER JOIN cosmetics_reviews cr ON crc.cosmetics_review_id = cr.id
             INNER JOIN cosmetics_products cp ON cr.cosmetics_product_id = cp.id
             INNER JOIN cosmetics_brands cb ON cp.cosmetics_brand_id = cb.id
