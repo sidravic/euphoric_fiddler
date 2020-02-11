@@ -67,3 +67,69 @@ relevant_makeup_df.loc[relevant_makeup_df['user_nickname']=='Mochapj']
 ```python
 df.dropna(subset=['EPS'], how='all', inplace=True)
 ```
+
+### What is weight decay
+
+Weight decay penalises complexity by subtracting the square of the weights of the parameters and multiples it with a constant
+This is so that the best loss is not substituting the values of the parameters with 0
+Hence wd is usually `e-1` or `e-01`
+
+### Standard SGD 
+
+Here the following things happen
+
+```python
+y = ax + b
+```
+
+Where m is the slope and b is the intercept
+
+1. Loss is calculated by the `mse` function which subtracts the `(y' - y) ** 2` and finds the `mean` of it
+2. We assume the value of 
+```python
+def mse(y_hat, y): 
+    return ((y_hat-y)**2).mean()
+
+a = nn.Parameter(a); a
+
+def update():
+    y_hat = x@a
+    loss = mse(y, y_hat)
+    if t % 10 == 0: print(loss)
+    loss.backward()
+    with torch.no_grad():
+        a.sub_(lr * a.grad)
+        a.grad.zero_()
+```
+
+### SGD with weight decay
+
+```python
+def update(x,y,lr):
+    wd = 1e-5
+    y_hat = model(x)
+    # weight decay
+    w2 = 0.
+    for p in model.parameters(): w2 += (p**2).sum()
+    # add to regular loss
+    loss = loss_func(y_hat, y) + w2*wd
+    loss.backward()
+    with torch.no_grad():
+        for p in model.parameters():
+            p.sub_(lr * p.grad)
+            p.grad.zero_()
+    return loss.item()
+```
+
+### What is momentum
+
+Momentum is a constant that is used to multiply the derivative which `a.gradient` or `p.gradient`
+in the earlier example in way where it adds momentum to the direction in which the model is learning
+
+assuming b = 0.9 (beta/momentum)
+
+1. So assuming for epoch 1 the gradient was 0.59 and epoch 2 the gradient was 0.74 the calculation for the new weight for a b would
+multiply the 0.59 (previous epoch) with 0.9 thus retaining the old momentum and multiply gradient of epoch 2 with 0.1 and subtract the weights
+
+Thus maintaining directional momentum. (momentum = 0.9 is the standard) 
+
