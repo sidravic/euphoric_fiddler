@@ -133,6 +133,8 @@ multiply the 0.59 (previous epoch) with 0.9 thus retaining the old momentum and 
 
 Thus maintaining directional momentum. (momentum = 0.9 is the standard) 
 
+
+
 ## Loss functions
 
 1. SGD which uses Mean squared error
@@ -154,15 +156,59 @@ Adam (Adaptive Moment Estimation) combines the benefits of momentum with the ben
 
 ## What are dropoffs
 
+Use regularisation rather than reducing than parameters. 
+
+```python
+last_learner = tabular_learner(data, layers=[1000,500], ps=[0.001,0.01], emb_drop=0.04, 
+                        y_range=y_range, metrics=accuracy)
+```
+
 ### p in tabular_learner
 It's form of regularisation. p in `tabular_learners` is the probability of dropping
 activations for each layer. It's specified on a per layer basis. `p=[0.001, 0.01]`
 
-### layers
+The common value is `0.5`. The layer activations are dropped off with the probability of p
+
+Dropouts aren't used at the time of testing. Only during training. The library handles it.
+ 
+
+### layers in tabular_learner
 It's the number of attributes you want to assign for each feature (input parameter). It defines the shape of the parameter matrix that the input will be multiplied with
 You can specify multiple layers for tabular data. `layers=[100, 50]`
 
-### emb_drop
-Embedding dropoffs
+
+
+### emb_drop in tabular_learner
+Embedding dropoffs deletes the outputs of the activations of certain embeddings at random with some probability
 
  
+ ## Predictions for tabular learner
+ 
+ ```python
+for index, row in test_df.iloc[0:50].iterrows():
+    actual = row['rating']
+    prediction = last_learner.predict(row)
+    prediction_ratios = prediction[2].numpy()
+    scores = [(c, k) for c, k in zip(last_learner.data.train_dl.classes, prediction_ratios)]
+    top_scores = sorted(scores, key=lambda x: x[1], reverse=True)[:2]
+    first_score = top_scores[0][1]
+    second_score = top_scores[1][1]
+    
+    if first_score > 0.65:
+        print(f'Sure - a: {actual} p: {prediction[0]} r: {prediction_ratios}')
+    else:
+        print(f'Unsure a: {actual} p*: {top_scores[0][0], top_scores[1][0]} r: {scores}')
+
+```
+
+## What is BatchNormalisation
+
+It reduces something called Internal Covariant Shift. Math has proved that it doesn't reduce internal covariant shift and why it works is not because of internal covariant shift
+
+![system schema](readme_images/batch_normalisation.png)
+
+1. For each mini batch `x` which is activations, first we find the mean
+2. Find the variance of all the activations
+3. We normalize the value that is `(values - mean / standard deviation)`
+4. Scale and shift where we add a bias term and another variable like a bias term which is multipled instead of adding. Hence `scaled`
+
