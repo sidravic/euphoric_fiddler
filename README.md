@@ -121,7 +121,7 @@ def update(x,y,lr):
     return loss.item()
 ```
 
-### What is momentum
+## What is momentum
 
 Momentum is a constant that is used to multiply the derivative which `a.gradient` or `p.gradient`
 in the earlier example in way where it adds momentum to the direction in which the model is learning
@@ -133,3 +133,36 @@ multiply the 0.59 (previous epoch) with 0.9 thus retaining the old momentum and 
 
 Thus maintaining directional momentum. (momentum = 0.9 is the standard) 
 
+## Loss functions
+
+1. SGD which uses Mean squared error
+2. Adam
+3. RMSProp 
+
+### RMSProp
+
+RMSPRop is very similar to Adagrad, with the aim of resolving Adagrad’s primary limitation. Adagrad will continually shrink the learning rate for a given parameter (effectively stopping training on that parameter eventually). RMSProp however is able to shrink or increase the learning rate.
+
+RMSProp will divide the overall learning rate by the square root of the sum of squares of the previous update gradients for a given parameter (as is done in Adagrad). The difference is that RMSProp doesn’t weight all of the previous update gradients equally, it uses an exponentially weighted moving average of the previous update gradients. This means that older values contribute less than newer values. This allows it to jump around the optimum without getting further and further away.
+
+Further, it allows us to account for changes in the hypersurface as we travel down the gradient, and adjust learning rate accordingly. If our parameter is stuck in a shallow plain, we'd expect it's recent gradients to be small, and therefore RMSProp increases our learning rate to push through it. Likewise, when we quickly descend a steep valley, RMSProp lowers the learning rate to avoid popping out of the minima.
+
+### Adam
+
+Adam (Adaptive Moment Estimation) combines the benefits of momentum with the benefits of RMSProp. Momentum is looking at the moving average of the gradient, and continues to adjust a parameter in that direction. RMSProp looks at the weighted moving average of the square of the gradients; this is essentially the recent variance in the parameter, and RMSProp shrinks the learning rate proportionally. Adam does both of these things - it multiplies the learning rate by the momentum, but also divides by a factor related to the variance.
+
+
+## What are dropoffs
+
+### p in tabular_learner
+It's form of regularisation. p in `tabular_learners` is the probability of dropping
+activations for each layer. It's specified on a per layer basis. `p=[0.001, 0.01]`
+
+### layers
+It's the number of attributes you want to assign for each feature (input parameter). It defines the shape of the parameter matrix that the input will be multiplied with
+You can specify multiple layers for tabular data. `layers=[100, 50]`
+
+### emb_drop
+Embedding dropoffs
+
+ 
