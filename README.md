@@ -233,7 +233,7 @@ This image represents how the image matrix having
 
 ```
 
-is now flattened into a 1 dimensonal tensor `[a, b, c, d, e, f, g, h, i, j]`
+is now flattened into a 1 dimensonal tensor `[a, b, c, d, e, f, g, h, i, j]`. THe weights are called the `kernel`
 
 The `b` in the example represents the bias. 
 
