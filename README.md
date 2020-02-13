@@ -212,3 +212,29 @@ It reduces something called Internal Covariant Shift. Math has proved that it do
 3. We normalize the value that is `(values - mean / standard deviation)`
 4. Scale and shift where we add a bias term and another variable like a bias term which is multipled instead of adding. Hence `scaled`
 
+## Convolution2D 
+
+Convolution2D essentially scans the pixels of an image as a 2x2 (as defined) matrix and multiples the values of each pixel with a weight and reduces a 2x2
+matrix of pixels into a single value.
+
+![system schema](readme_images/cnn_convolutions_01.png)
+
+In the above image the weights for alpha, beta, gamma and theta represent the weights identifying certain colors and reducing the result to a 2x2 matrix
+
+![system schema](readme_images/cnn_covolutions_02.png)
+
+This image represents how the image matrix having
+```python
+[   
+    [a, b, c], 
+    [d, e, f], 
+    [h, i, j]
+]
+
+```
+
+is now flattened into a 1 dimensonal tensor `[a, b, c, d, e, f, g, h, i, j]`
+
+The `b` in the example represents the bias. 
+
+
