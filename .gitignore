@@ -16,3 +16,4 @@ notebooks/models/*
 scribble/*
 notebooks/recommendations/train/.ipynb_checkpoints*
 notebooks/recommendations/data/*
+notebooks/category_based_recommendations/data

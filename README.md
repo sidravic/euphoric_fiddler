@@ -1,3 +1,7 @@
+# Euphoric Fiddler
+
+Euphoric Fiddler is a bunch of random experiments and scripts in data preprocessing and image filtering. It includes some notebooks on recommendations based on category and collaborative filtering. None of the code is optimised for production and is largely used as a reference to quick scripts and as a playground.
+
 ## Valuable Links 
 
 1. Count and sort with Pandas https://stackoverflow.com/questions/40454030/count-and-sort-with-pandas
